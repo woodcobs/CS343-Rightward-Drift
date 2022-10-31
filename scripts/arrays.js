@@ -92,6 +92,13 @@ const courseToCard = ({
   return courseTemplate;
 };
 
+function handleCourseDetails() {
+  console.log("handleCourseDetails");
+  const structuredData = JSON.parse(this.responseText);
+  console.log("detailed course info", structuredData);
+  data = structuredData;
+}
+
 function init() {
   filteredCourses = data.items;
   courseCards = data.items.map(courseToCard);
@@ -99,6 +106,18 @@ function init() {
   resultsContainer.innerHTML = filteredCourseCards.join("");
   updateCount();
 }
+
+for (let i = 0; i < filteredCourses.length; i++)
+{
+  console.log("i:", i);
+  let currentCourse = `${filteredCourses[i].prefix}${filteredCourses[i].number}.json`
+  console.log("currentCourse", currentCourse);
+  const req = new XMLHttpRequest();
+  req.addEventListener("load", handleCourseDetails);
+  req.open("GET", currentCourse);
+  req.send();
+}
+
 // courseCards.forEach((c) => document.write(c));
 
 // console.log(courseCards);
@@ -110,8 +129,8 @@ function init() {
 const filterCourseCard = (courseObj, query) => {
   console.log(courseObj, query);
   return (
-    courseObj.title.toLowerCase().includes(query.toLowerCase()) ||
-    courseObj.desc.toLowerCase().includes(query.toLowerCase()) ||
+    courseObj.title.toLowerCase().includes(query.toLowerCase())  ||
+    courseObj.desc.toLowerCase().includes(query.toLowerCase())   ||
     courseObj.prefix.toLowerCase().includes(query.toLowerCase()) ||
     (!isNaN(parseInt(query, 10)) && courseObj.number === parseInt(query, 10))
   );
